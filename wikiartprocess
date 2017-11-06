@@ -1,0 +1,45 @@
+#Reads in the file of data on the artworks
+
+library(ggplot2)
+library(reshape2)
+library(plyr)
+
+#Cleans the wikiart years data and plots a chart of style by genre and the number of works over time
+
+artinfo<-read.csv("filepath\\Paintings\\all_data_info.csv", header=T)
+
+#Sets all blanks to NA for not available 
+artinfo[artinfo==""] <- NA
+
+
+#Recodes the "circas" in the data
+artinfodat$date<-gsub("c.", "", artinfodat$date)
+
+artinfo$date<-as.numeric(as.character(artinfo$date))
+
+
+#Select only those variables with a date
+artinfodat<-subset(artinfo, is.na(artinfo$date)==FALSE)
+
+
+#Creates a category variable
+artinfodat$datecat<-round((artinfodat$date-1000)/100,0)
+
+
+#Removes the very old category 
+artinfodat<-subset(artinfodat, artinfodat$datecat >=1)
+
+#Sets the date variable to the four digit year format %Y
+artinfodat$date<-as.Date(as.character(artinfodat$date), "%Y")
+
+
+#Calculates the split for the cities over time
+artinfocount<-count(artinfodat, c('genre','style', 'date' ))
+
+#Does a heatmap of style against genre, rotates the x axis labels so that they are more readable
+ggplot(data = subset(artinfocount, artinfocount$freq>40), aes(x=style, y=genre, fill=freq)) + theme(axis.text.x=element_text(angle = -90, hjust = 0))+ geom_tile()
+
+
+#Plots the number of works by year
+ggplot(data=subset(artinfocount, (artinfocount$date %in% c("1311", "1885", "1934"))==FALSE),aes(x=date))+geom_bar()+ xlab("Year of work") + ylab("Number of art works")+scale_x_date(name = "Years", date_breaks = "25 years", position = "bottom")+ theme(axis.text.x=element_text(angle = -90, hjust = 0))
+
