@@ -1,0 +1,10 @@
+from ggplot import *
+
+#The density distributions in the same plot, note that variable names have to be in quotes
+ggplot(store2 , aes(x='georgprob',group='Name', fill='Name'))+ geom_density(alpha=0.4, lwd=0.8, adjust=0.5)+xlab("probability")
+
+#The density distributions on seperate plots
+
+ggplot(store2 , aes(x='georgprob'))+ geom_density(alpha=0.4, lwd=0.8, adjust=0.5)+facet_grid('Name')+theme_bw()+xlab("probability")
+
+
