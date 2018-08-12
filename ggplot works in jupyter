@@ -1,5 +1,17 @@
 from ggplot import *
 
+#Strip from the right the word random from the 'Name' column
+#dfrand['Name2'] = dfrand['Name'].map(lambda x: x.rstrip('random'))
+
+#Stacking two pandas on top of each other
+store2=verticalStack = pd.concat([df2, df3], axis=0)
+
+#Set up the column names
+store2.columns = ['paths', 'georgprob', 'Name']
+
+#Checks that these now are the names
+list(store2.columns.values)
+
 #The density distributions in the same plot, note that variable names have to be in quotes
 ggplot(store2 , aes(x='georgprob',group='Name', fill='Name'))+ geom_density(alpha=0.4, lwd=0.8, adjust=0.5)+xlab("probability")
 
