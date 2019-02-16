@@ -59,6 +59,22 @@ crimespdf@data<-cbind(crimespdf@data, inLon)
 
 #Removes the crimes that fall outside London
 crimespdf<-subset(crimespdf, crimespdf@data$OBJECTID!='NA') 
+
+
+####################################################################################################################################
+#Does a faceted density plot
+#removes data where there is no crime type
+crimespdf<-subset(crimespdf, crimespdf$crime.type!='')
+#Converts to a dataframe for ggplot
+crimespdf<-data.frame(crimespdf)
+
+gg<- ggplot()
+
+#plots it faceted by crime type 4 columns wide
+plot1<-gg+ggtitle("Distribution of crime in London")+stat_density2d(data=crimespdf, mapping=aes(x=longitude, y=latitude, fill=..level..), geom="polygon", alpha=0.2)+xlab('longitude')+ylab('latitude')+facet_wrap(~ crime.type, ncol=4) #facet_grid(. ~  crime.type)
+plot1<-plot1+ theme(plot.title = element_text(color="black", size=12, face="bold.italic"))+ geom_polygon(data = Lward, aes(x = long, y = lat),color = 'black', size = .1, fill=NA)
+
+plot1
 ########################################################################################################################################
 
 #Write out the crime point data as a geojson
